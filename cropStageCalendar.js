@@ -1,27 +1,35 @@
-﻿let jobArray = Array();
+﻿let testArray=[
+    {"cropStageId":3953,"startDate":"2022-06-12T00:00:00","endDate":"2022-09-09T00:00:00","order":1,"cropStageName":"Flowering"},{"cropStageId":3952,"startDate":"2022-09-10T00:00:00","endDate":"2022-12-08T00:00:00","order":2,"cropStageName":"Maturing"},{"cropStageId":3951,"startDate":"2022-12-09T00:00:00","endDate":"2023-03-08T00:00:00","order":3,"cropStageName":"Harvest"},{"cropStageId":3950,"startDate":"2023-03-09T00:00:00","endDate":"2023-06-11T00:00:00","order":4,"cropStageName":"Growth"}
+  ]
+
+$( document ).ready(function(){  
+let jobArray = Array();
 let ranges = Array();
 let currentCropStageIndex = 0;
 let monthes = Array();
 let elements = Array();
-let _dotNetHelper = dotNetHelper;
-function initializeCropStageCalendar(dotNetHelper, cropStages) {
-    _dotNetHelper = dotNetHelper;
+// let _dotNetHelper = dotNetHelper;
+function initializeCropStageCalendar( cropStages) {
+    // _dotNetHelper = dotNetHelper;
     $(document).ready(function () {
         initCropStageCalendarLocal(cropStages)
+        // unslick();
+        // initCropStageCalendarLocal(cropStages)
     });
 }
+
 //initialize component
 function initCropStageCalendarLocal(testArray) {
+    
     jobArray = testArray;
     changeStage('default');
     ranges = getDateRanges(jobArray);
     elements = createCalendar(rev_slider, monthes);
     startSlickSlider(elements);
     getColoredDates(ranges);
-    initializeSelectedStage(ranges);
     addEventListeners(ranges);
+    initializeSelectedStage(ranges);
 }
-
 //render calendar
 function createCalendar(elem, datesToRender) {
     let elements = Array();
@@ -110,43 +118,19 @@ function getDateRanges(testArray) {
 
 //get colored dates & classNames
 function getColoredDates(ranges) {
-    // let colorList = [
-    //   'rgba(65, 187, 112, 0.67)','rgba(151, 71, 255, 0.8)','#52A4FF','#FFDC24','#D9D9D9'
-    // ];
-    // let colorListHeadings = [
-    //   '#41BB70','#9747FF','#0079FE','#FFB966','#ABABAB'
-    // ];
 
     let colorList = [
-        'rgba(65, 187, 112, 0.67)'
+        '#64D991','#4CA2FF','#F0DC75','#A980DE','#FF8E7E','#FEB47F','#6EE7E0'
     ];
-    let colorListHeadings = [
-        '#41BB70'
-    ];
+    // // let colorListHeadings = [
+    // //     '#41BB70','#2486F2','#FFDC24','#9762DB','#FF725F','#F69B59','#3EDED4'
+    // // ];
 
     ranges.map((element, key) => {
-        element.forEach((item, index) => {
-
+        element.forEach((item) => {
             $('#td_' + item).addClass('item_' + key);
-
-            if (index == 0 || index == element.length - 1) {
-                $('#td_' + item).css('background', colorListHeadings[key % colorList.length]);
-                $('#td_' + item).css('color', 'white');
-                if (index == 0) {
-                    $('#td_' + item).css('borderRadius', '3px 0 0 3px');
-                    $('#td_' + item).css('borderLeftStyle', 'solid');
-                    $('#td_' + item).css('borderLeftColor', 'white');
-                }
-                else {
-                    $('#td_' + item).css('borderRadius', '0 3px 3px 0');
-                    $('#td_' + item).css('borderRightStyle', 'solid');
-                    $('#td_' + item).css('borderRightColor', 'white');
-                }
-            }
-            else {
-                $('#td_' + item).css('background', colorList[key % colorList.length]);
-                $('#td_' + item).css('color', 'white');
-            }
+            $('#td_' + item).css('color', colorList[key % colorList.length]);
+           
         })
     })
 }
@@ -183,16 +167,84 @@ function initializeSelectedStage(ranges) {
 
 //get selected stage
 function paintSelected(id) {
-    let items = document.querySelectorAll('.selected');
-    if (items.length != 0 && items.length != null) {
-        for (var j = 0; j <= items.length - 1; j++) {
-            items[j].classList.remove("selected");
-        };
-    }
-    ranges[id].forEach((element, key) => {
-        $('#td_' + element).addClass('selected')
-    });
+    let colorsArray = {
+        'rgb(100, 217, 145)':'rgb(65, 187, 112)',
+        'rgb(76, 162, 255)':'rgb(36, 134, 242)',
+        'rgb(240, 220, 117)':'rgb(255, 220, 36)',
+        'rgb(169, 128, 222)':'rgb(151, 98, 219)',
+        'rgb(255, 142, 126)':'rgb(255, 114, 95)',
+        'rgb(254, 180, 127)':'rgb(246, 155, 89)',
+        'rgb(110, 231, 224)':'rgb(62, 222, 212)',
+        'rgb(65, 187, 112)':'rgb(100, 217, 145)',
+        'rgb(36, 134, 242)':'rgb(76, 162, 255)',
+        'rgb(255, 220, 36)':'rgb(240, 220, 117)',
+        'rgb(151, 98, 219)':'rgb(169, 128, 222)',
+        'rgb(255, 114, 95)':'rgb(255, 142, 126)',
+        'rgb(246, 155, 89)':'rgb(254, 180, 127)',
+        'rgb(62, 222, 212)':'rgb(110, 231, 224)',
+    };  
 
+    if(!$('#td_' + ranges[id][0])[0].classList.contains('selected'))
+    {
+        setTimeout(()=>{
+            let items = document.querySelectorAll('.selected');
+            if (items.length != 0 && items.length != null) {
+                // for (var j = 0; j <= items.length - 1; j++) {
+                //     if(j==0||j==items.length-1)
+                //     {
+                //     items[j].classList.remove("selected");
+                //     let color = items[j].style.background;
+                //     items[j].style.color = color;
+                //     items[j].style.background = '#ffffff';
+                //     }
+                //     else
+                //     {
+                //     items[j].classList.remove("selected");
+                //     let color = items[j].style.background;
+                //     items[j].style.color = color;
+                //     items[j].style.background = '#ffffff';
+                //     }
+                // };
+                items.forEach((element,key)=>{
+                    if(key==0||key==items.length-1)
+                    {
+                    element.classList.remove("selected");
+                    let color = element.style.background;
+                    element.style.color = colorsArray[color];
+                    element.style.background = '#ffffff';
+                    }
+                    else
+                    {
+                    element.classList.remove("selected");
+                    let color = element.style.background;
+                    element.style.color = color;
+                    element.style.background = '#ffffff';
+                    }
+                })
+            }
+
+        },100);
+
+        setTimeout(()=>{
+        ranges[id].forEach((element, key) => {
+            if(key==0||key==ranges[id].length-1)
+            {
+                $('#td_' + element).addClass('selected');
+                let color = $('#td_' + element).css('color');
+                $('#td_' + element).css('background', colorsArray[color]);
+                $('#td_' + element).css('color', 'white');
+            }
+            else
+            {
+                $('#td_' + element).addClass('selected');
+                let color = $('#td_' + element).css('color');
+                $('#td_' + element).css('background', color);
+                $('#td_' + element).css('color', 'white');
+            }
+        });
+        },100);
+    }
+    
 }
 
 //add event listeners
@@ -201,7 +253,10 @@ function addEventListeners(ranges) {
         let elements = document.querySelectorAll('.item_' + key);
         for (let i = 0; i < elements.length; i++) {
             $(elements[i]).click(() => {
+                if (elements[i].classList[2] != 'selected')
+                {
                 setSelectedStageOnClick(elements[i])
+                }
             });
 
             elements[i].addEventListener('mouseover', function () {
@@ -255,7 +310,7 @@ function setSelectedStageOnClick(item) {
             $('.rev_slider').slick('slickGoTo', $(element).attr("data-slick-index"));
         }
     })
-    _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
+    // _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
 }
 
 //change Stages controller for stage buttons
@@ -352,3 +407,12 @@ function startSlickSlider(elements, active) {
         $(".rev_slider").slick('slickAdd', element);
     });
 }
+
+function unslick()
+{
+    $(".rev_slider").slick('unslick');
+    $(".rev_slider").empty();
+}
+
+initializeCropStageCalendar(testArray);
+});
