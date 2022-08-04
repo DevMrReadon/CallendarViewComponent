@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="libs/slick/slick.css">
+  <link rel="stylesheet" href="libs/slick/slick-theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+</head>
+<style>
+  body{
+    padding: 20px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    height: auto;
+  }
+  .date_cell{
+    padding: 3px 6px;
+  }
+  .currentDate{
+    z-index: 1000;
+    /* background: rgb(158, 158, 158); */
+    border-radius: 2px;
+    color:white !important;
+  }
+  .slick-track{
+    display: flex;
+  }
+  .photo{
+    width: 80px;
+    height: 80px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+  }
+  .slick-list{
+    overflow: hidden !important;
+  }
+  .rev_slider{
+    /* padding: 5px 20px 20px 5px; */
+    border-radius: 6px;
+  }
+  .left{
+    left: 45px;
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./2.png);
+    cursor: pointer;
+  }
+  .right{
+    right: 45px;
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./1.png);
+    cursor: pointer;
+  }
+  .prev-stage{
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./2.png);
+    cursor: pointer;
+  }
+  .next-stage{
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./1.png);
+    cursor: pointer;
+  }
+  .current-stage{
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 16px;
+  }
+  .calendar{    
+    /* padding: 15px; */
+    font-weight: 700;
+  }
+  .selected{
+    /* transition-duration: 0.3s; */
+  }
+  .over{
+    transition-duration: 0.3s;
+    background: #EAEAEA !important;
+    /* color: white !important; */
+  }
+  .over:hover{
+    cursor: pointer;
+  }
+  td{
+    
+  }
+  table {
+      border-spacing: 0 15px;
+      width: 100%;
+      margin: auto;
+  }
+  td,th {
+      max-width: 50px;
+      max-height: 30px;
+      height: 30px;
+      width: 50px;
+      text-align: center;
+  }
+  th {
+      font-weight: bold;
+  }
+  .stages_calendar_label{
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: center;
+      margin: 25px 0px 0px 0px;
+  }
+  .stages-arrows-label{
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  .stages-arrows-label span{
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  @media only screen and (min-width:520px){
+    .left-btn{
+    left: 45px;
+    width: 238px;
+    height: 42px;
+    cursor: pointer;
+    background: #41BB70;
+    border:#41BB70 ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+  .right-btn{
+    right: 45px;
+    width: 122px;
+    height: 42px;
+    cursor: pointer;
+    background: #0079FE;
+    border:#0079FE ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+  }
+  @media only screen and (max-width: 520px) and (min-width:400px) {
+    .left-btn{
+    left: 45px;
+    width: 138px;
+    height: 42px;
+    cursor: pointer;
+    background: #41BB70;
+    border:#41BB70 ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+  .right-btn{
+    right: 45px;
+    width: 72px;
+    height: 42px;
+    cursor: pointer;
+    background: #0079FE;
+    border:#0079FE ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+  }
+  @media screen and (max-width:400px) {
+    .wrapper{
+      position: relative;
+      padding: 185px 5px 0px 5px;
+      background: #FFFFFF;
+      box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      height: 700px;
+      max-height: 700px;
+    }
+    .left,.right{
+    position: absolute;
+    top:122px;
+    }
+    .left-btn,.right-btn{
+    position: absolute;
+    top:0px;
+  }
+    .left-btn{
+    top:18px;
+    right: 17px;
+    width: 138px;
+    height: 42px;
+    cursor: pointer;
+    background: #41BB70;
+    border:#41BB70 ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+  
+  .right-btn{
+    right: 17px;
+    top: 77px;
+    width: 72px;
+    height: 42px;
+    cursor: pointer;
+    background: #0079FE;
+    border:#0079FE ;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    color: #FFFFFF;
+    transition: ease all .5s;
+  }
+
+  .left{
+    left: 17px !important;
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./2.png);
+    cursor: pointer;
+  }
+  .right{
+    right: 17px !important;
+    border-radius: 6px;
+    width: 42px;
+    height: 42px;
+    background:url(./1.png);
+    cursor: pointer;
+  }
+  }
+  @media only screen and (max-width: 430px) and (min-width: 400px) {
+      .slide{
+        width: 100% !important;
+      max-height: 400px;
+      height: 400px;
+      padding: 5px;
+      background: #FFFFFF;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      margin: 15px !important;
+    }
+    .stages_calendar_label{
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 10px;
+      margin-left: 15px;
+    }
+  }
+  @media only screen and (max-width: 400px) {
+    .stages-btn{
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  .stages-arrows-label{
+    padding:0px 15px 0px 15px !important;
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  .stages-arrows-label span{
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  .stages-arrows-left{
+    height: 42px;
+    width: 42px;
+    left: 45px;
+    top: 740px;
+    position: absolute;
+  }
+  .stages-arrows-right{
+    height: 42px;
+    width: 42px;
+    right: 45px;;
+    top: 740px;
+    position: absolute;
+  }
+      .slide{
+        padding: 5px;
+      max-height: 400 !important;
+      height: 400 !important;
+      background: #FFFFFF;
+      /* box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25); */
+      border-radius: 10px;
+    }
+  }
+  @media only screen and (min-width: 400px) {
+    .stages-btn{
+    text-align: center;
+    width: 100%;
+    -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+  }
+  .stages-arrows{
+    height: 42px;
+    display: inline-block;
+  }
+    .left-btn,.right-btn{
+    position: absolute;
+    top:18px;
+  }
+    .slide{
+      padding: 5px;
+    width: 350px;
+    max-height: 400px;
+    height: 400px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin: 5px auto;
+  }
+  .wrapper{
+    position: relative;
+    padding: 125px 5px 0px 5px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    height: 720px;
+    max-height: 720px;
+  }
+  .left,.right{
+    position: absolute;
+    top:58px;
+  }
+  .left-btn,.right-btn{
+    position: absolute;
+    top:18px;
+  }
+  }
+  @media screen and (max-width:320px) {
+   .calendar{
+    padding: 0px;
+   }
+   .slide{
+    padding: 5px;
+    max-height: 400px  !important;
+    height: 400px  !important;
+   }
+  }
+  .span{
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    height: 40px;
+    vertical-align: middle;
+    display: table-cell;
+    text-align: center;
+    width: 50px;
+  }
+  .span span{
+    padding: 4;
+    font-size: 14px;
+    font-weight: 700;
+  }
+ 
+
+  
+</style>
+<body>
+
+  <div class="wrapper">
+    <div class="calendar-btns">
+      <button class="left-btn">ADD YOUR FERTILIZERS</button>
+      <button class="right-btn">Download</button>
+    </div>
+      <p class="left"></p>
+      <p class="right"></p>
+    <div id="rev_slider" class="rev_slider">
+     </div>
+    <div class="stages-btn">
+      <div class="stages-arrows stages-arrows-left">
+        <p class="prev-stage"></p>
+      </div>
+      <div class="stages-arrows stages-arrows-label" style="padding: 0px 10px 0px 10px;">
+        <span id="current-stage" class="current-stage"></span>
+      </div>
+      <div class="stages-arrows stages-arrows-right">
+        <p class="next-stage"></p>
+      </div>
+    </div>
+  </div>
+ 
+
+  <script src="libs/jquery-3.6.0.min.js"></script>
+  <script src="libs/slick/slick.min.js"></script>
+  <script src="libs/cropStageCalendar.js"></script>
+</body>
+</html>
