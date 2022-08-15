@@ -1,35 +1,38 @@
-﻿let testArray=[
-    {"cropStageId":3953,"startDate":"2022-06-12T00:00:00","endDate":"2022-09-09T00:00:00","order":1,"cropStageName":"Flowering"},{"cropStageId":3952,"startDate":"2022-09-10T00:00:00","endDate":"2022-12-08T00:00:00","order":2,"cropStageName":"Maturing"},{"cropStageId":3951,"startDate":"2022-12-09T00:00:00","endDate":"2023-03-08T00:00:00","order":3,"cropStageName":"Harvest"},{"cropStageId":3950,"startDate":"2023-03-09T00:00:00","endDate":"2023-06-11T00:00:00","order":4,"cropStageName":"Growth"}
-  ]
-
-$( document ).ready(function(){  
-let jobArray = Array();
+﻿let jobArray = Array();
 let ranges = Array();
 let currentCropStageIndex = 0;
 let monthes = Array();
 let elements = Array();
-// let _dotNetHelper = dotNetHelper;
-function initializeCropStageCalendar( cropStages) {
-    // _dotNetHelper = dotNetHelper;
+let _dotNetHelper = dotNetHelper;
+function initializeCropStageCalendar(dotNetHelper, cropStages) {
+    _dotNetHelper = dotNetHelper;
     $(document).ready(function () {
         initCropStageCalendarLocal(cropStages)
-        // unslick();
-        // initCropStageCalendarLocal(cropStages)
     });
 }
 
 //initialize component
 function initCropStageCalendarLocal(testArray) {
-    
     jobArray = testArray;
     changeStage('default');
     ranges = getDateRanges(jobArray);
     elements = createCalendar(rev_slider, monthes);
     startSlickSlider(elements);
     getColoredDates(ranges);
-    addEventListeners(ranges);
     initializeSelectedStage(ranges);
+    addEventListeners(ranges);
 }
+
+function rerenderCropStageCalendar(cropStages) {
+    unslick();
+    initCropStageCalendarLocal(cropStages)
+}
+
+function unslick() {
+    $(".rev_slider").slick('unslick');
+    $(".rev_slider").empty();
+}
+
 //render calendar
 function createCalendar(elem, datesToRender) {
     let elements = Array();
@@ -120,7 +123,7 @@ function getDateRanges(testArray) {
 function getColoredDates(ranges) {
 
     let colorList = [
-        '#64D991','#4CA2FF','#F0DC75','#A980DE','#FF8E7E','#FEB47F','#6EE7E0'
+        '#64D991', '#4CA2FF', '#F0DC75', '#A980DE', '#FF8E7E', '#FEB47F', '#6EE7E0'
     ];
     // // let colorListHeadings = [
     // //     '#41BB70','#2486F2','#FFDC24','#9762DB','#FF725F','#F69B59','#3EDED4'
@@ -130,7 +133,7 @@ function getColoredDates(ranges) {
         element.forEach((item) => {
             $('#td_' + item).addClass('item_' + key);
             $('#td_' + item).css('color', colorList[key % colorList.length]);
-           
+
         })
     })
 }
@@ -153,13 +156,14 @@ function initializeSelectedStage(ranges) {
         let item = document.getElementsByClassName('item_' + stageNum)[0];
 
         let slideNum = (($(item).attr('class')).split(" ")[0]).replace('slide_', "");
-        let elements = document.querySelectorAll('.slide');
+        let elements = document.querySelectorAll('.slick-slide');
         elements.forEach(element => {
             if ($(element).attr("data-slick-index") == slideNum) {
 
                 setTimeout(() => {
                     $('.rev_slider').slick('slickGoTo', $(element).attr("data-slick-index"));
                 }, 100)
+                let currentSlideIndex = $('.rev_slider').slick('slickCurrentSlide');
             }
         })
     }
@@ -168,83 +172,63 @@ function initializeSelectedStage(ranges) {
 //get selected stage
 function paintSelected(id) {
     let colorsArray = {
-        'rgb(100, 217, 145)':'rgb(65, 187, 112)',
-        'rgb(76, 162, 255)':'rgb(36, 134, 242)',
-        'rgb(240, 220, 117)':'rgb(255, 220, 36)',
-        'rgb(169, 128, 222)':'rgb(151, 98, 219)',
-        'rgb(255, 142, 126)':'rgb(255, 114, 95)',
-        'rgb(254, 180, 127)':'rgb(246, 155, 89)',
-        'rgb(110, 231, 224)':'rgb(62, 222, 212)',
-        'rgb(65, 187, 112)':'rgb(100, 217, 145)',
-        'rgb(36, 134, 242)':'rgb(76, 162, 255)',
-        'rgb(255, 220, 36)':'rgb(240, 220, 117)',
-        'rgb(151, 98, 219)':'rgb(169, 128, 222)',
-        'rgb(255, 114, 95)':'rgb(255, 142, 126)',
-        'rgb(246, 155, 89)':'rgb(254, 180, 127)',
-        'rgb(62, 222, 212)':'rgb(110, 231, 224)',
-    };  
+        'rgb(100, 217, 145)': 'rgb(65, 187, 112)',
+        'rgb(76, 162, 255)': 'rgb(36, 134, 242)',
+        'rgb(240, 220, 117)': 'rgb(255, 220, 36)',
+        'rgb(169, 128, 222)': 'rgb(151, 98, 219)',
+        'rgb(255, 142, 126)': 'rgb(255, 114, 95)',
+        'rgb(254, 180, 127)': 'rgb(246, 155, 89)',
+        'rgb(110, 231, 224)': 'rgb(62, 222, 212)',
+        'rgb(65, 187, 112)': 'rgb(100, 217, 145)',
+        'rgb(36, 134, 242)': 'rgb(76, 162, 255)',
+        'rgb(255, 220, 36)': 'rgb(240, 220, 117)',
+        'rgb(151, 98, 219)': 'rgb(169, 128, 222)',
+        'rgb(255, 114, 95)': 'rgb(255, 142, 126)',
+        'rgb(246, 155, 89)': 'rgb(254, 180, 127)',
+        'rgb(62, 222, 212)': 'rgb(110, 231, 224)',
+    };
 
-    if(!$('#td_' + ranges[id][0])[0].classList.contains('selected'))
-    {
-        setTimeout(()=>{
+            if (!$('#td_' + ranges[id][0])[0].classList.contains('selected')) {
+        setTimeout(() => {
             let items = document.querySelectorAll('.selected');
             if (items.length != 0 && items.length != null) {
-                // for (var j = 0; j <= items.length - 1; j++) {
-                //     if(j==0||j==items.length-1)
-                //     {
-                //     items[j].classList.remove("selected");
-                //     let color = items[j].style.background;
-                //     items[j].style.color = color;
-                //     items[j].style.background = '#ffffff';
-                //     }
-                //     else
-                //     {
-                //     items[j].classList.remove("selected");
-                //     let color = items[j].style.background;
-                //     items[j].style.color = color;
-                //     items[j].style.background = '#ffffff';
-                //     }
-                // };
-                items.forEach((element,key)=>{
-                    if(key==0||key==items.length-1)
-                    {
-                    element.classList.remove("selected");
-                    let color = element.style.background;
-                    element.style.color = colorsArray[color];
-                    element.style.background = '#ffffff';
+                items.forEach((element, key) => {
+
+                    let item = $(element).css('background').toString().split(' ');
+                    let color = (item[0]+' '+item[1]+' '+item[2]).toString();
+                    //Костыль для mozilla firefox
+                    if (key == 0 || key == items.length - 1) {
+                        $(element).removeClass('selected');
+                        $(element).css('color',colorsArray[color]);
+                        $(element).css('background','#ffffff');
                     }
-                    else
-                    {
-                    element.classList.remove("selected");
-                    let color = element.style.background;
-                    element.style.color = color;
-                    element.style.background = '#ffffff';
+                    else {
+                        $(element).removeClass('selected');
+                        $(element).css('color',color);
+                        $(element).css('background','#ffffff');
                     }
                 })
             }
+        }, 100);
 
-        },100);
-
-        setTimeout(()=>{
-        ranges[id].forEach((element, key) => {
-            if(key==0||key==ranges[id].length-1)
-            {
-                $('#td_' + element).addClass('selected');
-                let color = $('#td_' + element).css('color');
-                $('#td_' + element).css('background', colorsArray[color]);
-                $('#td_' + element).css('color', 'white');
-            }
-            else
-            {
-                $('#td_' + element).addClass('selected');
-                let color = $('#td_' + element).css('color');
-                $('#td_' + element).css('background', color);
-                $('#td_' + element).css('color', 'white');
-            }
-        });
-        },100);
+        setTimeout(() => {
+            ranges[id].forEach((element, key) => {
+                if (key == 0 || key == ranges[id].length - 1) {
+                    $('#td_' + element).addClass('selected');
+                    let color = $('#td_' + element).css('color');
+                    $('#td_' + element).css('background', colorsArray[color]);
+                    $('#td_' + element).css('color', 'white');
+                }
+                else {
+                    $('#td_' + element).addClass('selected');
+                    let color = $('#td_' + element).css('color');
+                    $('#td_' + element).css('background', color);
+                    $('#td_' + element).css('color', 'white');
+                }
+            });
+        }, 300);
     }
-    
+
 }
 
 //add event listeners
@@ -253,9 +237,8 @@ function addEventListeners(ranges) {
         let elements = document.querySelectorAll('.item_' + key);
         for (let i = 0; i < elements.length; i++) {
             $(elements[i]).click(() => {
-                if (elements[i].classList[2] != 'selected')
-                {
-                setSelectedStageOnClick(elements[i])
+                if (elements[i].classList[2] != 'selected') {
+                    setSelectedStageOnClick(elements[i])
                 }
             });
 
@@ -285,13 +268,12 @@ function selectStageById(cropStageId) {
     paintSelected(index)
     let slideNum = $('.item_' + index).attr('class').split(" ")[0];
     let num = slideNum.replace('slide_', '');
-    console.log(num);
     $('.rev_slider').slick('slickGoTo', num);
 }
 
 //select Stages by click on date
 function setSelectedStageOnClick(item) {
-    
+
     let id = $(item).attr('id');
     let startDate = "";
     ranges.map(element => {
@@ -304,15 +286,38 @@ function setSelectedStageOnClick(item) {
         })
     })
     let slideNum = $('#td_' + startDate).attr('class').split(" ")[0];
-    
+
     let elements = document.querySelectorAll('.slick-slide');
     elements.forEach(element => {
         if ($(element).attr("data-slick-index") == slideNum.replace('slide_', '')) {
-            
             $('.rev_slider').slick('slickGoTo', $(element).attr("data-slick-index"));
+            let currentSlideIndex = $('.rev_slider').slick('slickCurrentSlide');
+            let globalCount = $('.rev_slider').slick('getSlick').slideCount;
+            let slidesToShow = $('.rev_slider').slick('slickGetOption', 'slidesToShow');
+            if(currentSlideIndex==0)
+            {
+                $('.left').prop('disabled', true);
+                $('.left').addClass('disabledLeft');
+                $('.right').prop('disabled', false);
+                $('.right').removeClass('disabledRight');
+            }
+            else if((currentSlideIndex+slidesToShow)>=globalCount)
+            {
+                $('.right').prop('disabled', true);
+                $('.right').addClass('disabledRight');
+                $('.left').prop('disabled', false);
+                $('.left').removeClass('disabledLeft');
+            }
+            else {
+                $('.left').prop('disabled', false);
+                $('.left').removeClass('disabledLeft');
+                $('.right').prop('disabled', false);
+                $('.right').removeClass('disabledRight');
+            }
         }
     })
-    // _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
+
+    _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
 }
 
 //change Stages controller for stage buttons
@@ -400,21 +405,84 @@ function startSlickSlider(elements, active) {
     });
     $(".left").click(function () {
         $(".rev_slider").slick("slickPrev");
+        let currentSlideIndex = $('.rev_slider').slick('slickCurrentSlide');
+        $('.right').prop('disabled', false);
+        $('.right').removeClass('disabledRight');
+        if(currentSlideIndex==0)
+        {
+            $('.left').prop('disabled', true);
+            $('.left').addClass('disabledLeft');
+        }
+
     });
 
     $(".right").click(function () {
         $(".rev_slider").slick("slickNext");
+        let currentSlideIndex = $('.rev_slider').slick('slickCurrentSlide');
+        let globalCount = $('.rev_slider').slick('getSlick').slideCount;
+        let slidesToShow = $('.rev_slider').slick('slickGetOption', 'slidesToShow');
+        $('.left').prop('disabled', false);
+        $('.left').removeClass('disabledLeft');
+        if((currentSlideIndex+slidesToShow)>=globalCount)
+        {
+            $('.right').prop('disabled', true);
+            $('.right').addClass('disabledRight');
+        }
     });
+
     elements.forEach(element => {
         $(".rev_slider").slick('slickAdd', element);
     });
-}
 
-function unslick()
-{
-    $(".rev_slider").slick('unslick');
-    $(".rev_slider").empty();
-}
+    $(".slick-dots li button").click(function(e){
+        let globalCount = $('.rev_slider').slick('getSlick').slideCount;
+        if(e.target.innerHTML==1)
+        {
+            $('.left').prop('disabled', true);
+            $('.left').addClass('disabledLeft');
+            $('.right').prop('disabled', false);
+            $('.right').removeClass('disabledRight');
+        }
+        else if(e.target.innerHTML>=globalCount)
+        {
+            $('.right').prop('disabled', true);
+            $('.right').addClass('disabledRight');
+            $('.left').prop('disabled', false);
+            $('.left').removeClass('disabledLeft');
+        }
+        else
+        {
+            $('.right').prop('disabled', false);
+            $('.right').removeClass('disabledRight');
+            $('.left').prop('disabled', false);
+            $('.left').removeClass('disabledLeft');
+        }
+    });
 
-initializeCropStageCalendar(testArray);
-});
+    $('.rev_slider').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+        let globalCount = $('.rev_slider').slick('getSlick').slideCount;
+        let slidesToShow = $('.rev_slider').slick('slickGetOption', 'slidesToShow');
+        
+        if((nextSlide+1)==1)
+        {
+            $('.left').prop('disabled', true);
+            $('.left').addClass('disabledLeft');
+            $('.right').prop('disabled', false);
+            $('.right').removeClass('disabledRight');
+        }
+        else if((nextSlide+slidesToShow)>=globalCount)
+        {
+            $('.right').prop('disabled', true);
+            $('.right').addClass('disabledRight');
+            $('.left').prop('disabled', false);
+            $('.left').removeClass('disabledLeft');
+        }
+        else
+        {
+            $('.right').prop('disabled', false);
+            $('.right').removeClass('disabledRight');
+            $('.left').prop('disabled', false);
+            $('.left').removeClass('disabledLeft');
+        }
+      });
+}
