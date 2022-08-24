@@ -1,11 +1,22 @@
-﻿let jobArray = Array();
+﻿﻿let testArray=[
+    {"cropStageId":3953,"startDate":"2022-06-12T00:00:00","endDate":"2022-09-09T00:00:00","order":1,"cropStageName":"Flowering"},{"cropStageId":3952,"startDate":"2022-09-10T00:00:00","endDate":"2022-12-08T00:00:00","order":2,"cropStageName":"Maturing"},{"cropStageId":3951,"startDate":"2022-12-09T00:00:00","endDate":"2023-03-08T00:00:00","order":3,"cropStageName":"Harvest"},{"cropStageId":3950,"startDate":"2023-03-09T00:00:00","endDate":"2023-06-11T00:00:00","order":4,"cropStageName":"Growth"}
+]
+
+$(document).ready(function() {
+let stageNames = Array();
+let jobArray = Array();
 let ranges = Array();
 let currentCropStageIndex = 0;
 let monthes = Array();
 let elements = Array();
-let _dotNetHelper = dotNetHelper;
-function initializeCropStageCalendar(dotNetHelper, cropStages) {
-    _dotNetHelper = dotNetHelper;
+// let _dotNetHelper = dotNetHelper;
+// function initializeCropStageCalendar(dotNetHelper, cropStages) {
+//     _dotNetHelper = dotNetHelper;
+//     $(document).ready(function () {
+//         initCropStageCalendarLocal(cropStages)
+//     });
+// }
+function initializeCropStageCalendar( cropStages) {
     $(document).ready(function () {
         initCropStageCalendarLocal(cropStages)
     });
@@ -35,6 +46,7 @@ function unslick() {
 
 //render calendar
 function createCalendar(elem, datesToRender) {
+    
     let elements = Array();
     datesToRender.forEach((element, key) => {
         let data = element.split('-');
@@ -59,10 +71,10 @@ function createCalendar(elem, datesToRender) {
         // <td> ячейки календаря с датами
         while (d.getMonth() == mon) {
             if ((d.getDate() + "_" + fullMonth + "_" + year) == normilizedDateNow) {
-                table += "<td class='" + "slide_" + key + "' id='" + "td_" + d.getDate() + "_" + fullMonth + "_" + year + "'><span class='date_cell currentDate'>" + d.getDate() + "</span></td>";
+                table += "<td class='" + "slide_" + key + "' id='" + "td_" + d.getDate() + "_" + fullMonth + "_" + year + "'><div class='tooltip'><span class='date_cell currentDate'>" + d.getDate() + "</span><span class='tooltiptextHidden'>"+getName(d.getDate() + "_" + fullMonth + "_" + year)+"</span></div></td>";
             }
             else {
-                table += "<td class='" + "slide_" + key + "' id='" + "td_" + d.getDate() + "_" + fullMonth + "_" + year + "'><span class='date_cell'>" + d.getDate() + "</span></td>";
+                table += "<td class='" + "slide_" + key + "' id='" + "td_" + d.getDate() + "_" + fullMonth + "_" + year + "'><div class='tooltip'><span class='date_cell'>" + d.getDate() + "</span><span class='tooltiptextHidden'>"+getName(d.getDate() + "_" + fullMonth + "_" + year)+"</span></div></td>";
             }
 
 
@@ -89,6 +101,18 @@ function createCalendar(elem, datesToRender) {
     return elements;
 }
 
+//get Stage name 
+function getName(date){
+    let item = stageNames.find(x=>x.key==date);
+    try{
+        return item.name;
+    }
+    catch(err)
+    {
+        return null;
+    }
+}
+
 //get dates for calendar
 function getDay(date) {
     // получить номер дня недели, от 0 (пн) до 6 (вс)
@@ -100,7 +124,7 @@ function getDay(date) {
 //get date ranges
 function getDateRanges(testArray) {
     let dateRangesArray = Array();
-    testArray.forEach(element => {
+    testArray.forEach((element,key) => {
         let startDate = new Date(element.startDate);
         startDate.setHours(0, 0, 0, 0);
         let endDate = new Date(element.endDate);
@@ -110,8 +134,10 @@ function getDateRanges(testArray) {
             let monthAndYear = (startDate.getMonth() + 1) + '-' + startDate.getFullYear();
             if (monthes.indexOf(monthAndYear) == -1) {
                 monthes.push(monthAndYear);
+                
             }
             newArray.push(startDate.getDate() + '_' + (startDate.getMonth() + 1) + '_' + startDate.getFullYear());
+            stageNames.push({key:startDate.getDate() + '_' + (startDate.getMonth() + 1) + '_' + startDate.getFullYear(), name: element.cropStageName})
             startDate.setDate(startDate.getDate() + 1);
         }
         dateRangesArray.push(newArray)
@@ -133,7 +159,7 @@ function getColoredDates(ranges) {
         element.forEach((item) => {
             $('#td_' + item).addClass('item_' + key);
             $('#td_' + item).css('color', colorList[key % colorList.length]);
-
+            $('#td_' + item).css('background', colorList[key % colorList.length]+'30');
         })
     })
 }
@@ -187,7 +213,6 @@ function paintSelected(id) {
         'rgb(246, 155, 89)': 'rgb(254, 180, 127)',
         'rgb(62, 222, 212)': 'rgb(110, 231, 224)',
     };
-
             if (!$('#td_' + ranges[id][0])[0].classList.contains('selected')) {
         setTimeout(() => {
             let items = document.querySelectorAll('.selected');
@@ -200,12 +225,16 @@ function paintSelected(id) {
                     if (key == 0 || key == items.length - 1) {
                         $(element).removeClass('selected');
                         $(element).css('color',colorsArray[color]);
-                        $(element).css('background','#ffffff');
+                        let backgroundColor = colorsArray[color].replace('rgb','rgba');
+                        backgroundColor = backgroundColor.replace(')',', 0.3)');
+                        $(element).css('background',backgroundColor);
                     }
                     else {
                         $(element).removeClass('selected');
                         $(element).css('color',color);
-                        $(element).css('background','#ffffff');
+                        let backgroundColor = color.replace('rgb','rgba');
+                        backgroundColor = backgroundColor.replace(')',', 0.3)');
+                        $(element).css('background',backgroundColor);
                     }
                 })
             }
@@ -244,6 +273,10 @@ function addEventListeners(ranges) {
 
             elements[i].addEventListener('mouseover', function () {
                 let elementsNext = document.querySelectorAll('.item_' + key);
+                let childrens = elements[i].children[0];
+                let child = childrens.children[1];
+                child.classList.remove('tooltiptextHidden');
+                child.classList.add('tooltiptext');
                 elementsNext.forEach(elementNext => {
                     if (elementNext.classList[2] != 'selected') {
                         elementNext.classList.add('over');
@@ -253,6 +286,10 @@ function addEventListeners(ranges) {
 
             elements[i].addEventListener('mouseout', function () {
                 let elementsNext = document.querySelectorAll('.item_' + key);
+                let childrens = elements[i].children[0];
+                let child = childrens.children[1];
+                child.classList.remove('tooltiptext');
+                child.classList.add('tooltiptextHidden');
                 elementsNext.forEach(elementNext => {
                     if (elementNext.classList[2] != 'selected') {
                         elementNext.classList.remove('over');
@@ -317,7 +354,7 @@ function setSelectedStageOnClick(item) {
         }
     })
 
-    _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
+    // _dotNetHelper.invokeMethodAsync('OnJSCropStageSelected', jobArray[currentCropStageIndex].cropStageId)
 }
 
 //change Stages controller for stage buttons
@@ -486,3 +523,6 @@ function startSlickSlider(elements, active) {
         }
       });
 }
+
+initializeCropStageCalendar(testArray);
+});

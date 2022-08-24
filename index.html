@@ -12,6 +12,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 <style>
+  /* Tooltip container */
+.tooltip {
+    position: relative;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: #616161;
+    color: #fff;
+    text-align: center;
+    font-size: 10px !important;
+    padding: 4px 0;
+    border-radius: 6px;
+    width: 80px;
+    top: 120%;
+    left: 50%;
+    margin-left: -30px; /* Use half of the width (120/2 = 60), to center the tooltip */
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    transition-delay: 500ms;
+}
+.tooltip .tooltiptextHidden{
+  display: none !important;
+}
+.tooltip .tooltiptext {
+    visibility: visible !important;
+}
+@keyframes my-animation {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+/* .tooltip:hover .tooltiptext {
+    visibility: visible;
+} */
+
   body{
     padding: 20px;
     font-family: 'Montserrat';
