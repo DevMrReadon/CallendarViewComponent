@@ -125,6 +125,7 @@ function getDay(date) {
 function getDateRanges(testArray) {
     let dateRangesArray = Array();
     testArray.forEach((element,key) => {
+        console.log(key)
         let startDate = new Date(element.startDate);
         startDate.setHours(0, 0, 0, 0);
         let endDate = new Date(element.endDate);
@@ -149,7 +150,7 @@ function getDateRanges(testArray) {
 function getColoredDates(ranges) {
 
     let colorList = [
-        '#64D991', '#4CA2FF', '#F0DC75', '#A980DE', '#FF8E7E', '#FEB47F', '#6EE7E0'
+        '#64D991', '#4CA2FF', '#FF8E7E', '#FEB47F', '#6EE7E0'
     ];
     // // let colorListHeadings = [
     // //     '#41BB70','#2486F2','#FFDC24','#9762DB','#FF725F','#F69B59','#3EDED4'
@@ -200,15 +201,15 @@ function paintSelected(id) {
     let colorsArray = {
         'rgb(100, 217, 145)': 'rgb(65, 187, 112)',
         'rgb(76, 162, 255)': 'rgb(36, 134, 242)',
-        'rgb(240, 220, 117)': 'rgb(255, 220, 36)',
-        'rgb(169, 128, 222)': 'rgb(151, 98, 219)',
+        // 'rgb(240, 220, 117)': 'rgb(255, 220, 36)',
+        // 'rgb(169, 128, 222)': 'rgb(151, 98, 219)',
         'rgb(255, 142, 126)': 'rgb(255, 114, 95)',
         'rgb(254, 180, 127)': 'rgb(246, 155, 89)',
         'rgb(110, 231, 224)': 'rgb(62, 222, 212)',
         'rgb(65, 187, 112)': 'rgb(100, 217, 145)',
         'rgb(36, 134, 242)': 'rgb(76, 162, 255)',
-        'rgb(255, 220, 36)': 'rgb(240, 220, 117)',
-        'rgb(151, 98, 219)': 'rgb(169, 128, 222)',
+        // 'rgb(255, 220, 36)': 'rgb(240, 220, 117)',
+        // 'rgb(151, 98, 219)': 'rgb(169, 128, 222)',
         'rgb(255, 114, 95)': 'rgb(255, 142, 126)',
         'rgb(246, 155, 89)': 'rgb(254, 180, 127)',
         'rgb(62, 222, 212)': 'rgb(110, 231, 224)',
